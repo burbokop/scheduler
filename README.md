@@ -1,5 +1,4 @@
 # scheduler
-https://github.com/burbokop/scheduler/blob/master/result_diagram.png
 
 
 ```
@@ -15,3 +14,4 @@ https://github.com/burbokop/scheduler/blob/master/result_diagram.png
   erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier3"), Time::nowMillis() + 500);
 }
 ```
+![alt text](https://github.com/burbokop/scheduler/blob/master/result_diagram.png)
