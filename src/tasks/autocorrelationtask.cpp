@@ -17,5 +17,5 @@ std::optional<QVariant> AutoCorrelationTask::proceed() {
 
 void AutoCorrelationTask::reset() {
     SignalGenerator signalGenerator(10, 900);
-    it = Correlation::iterator(signalGenerator.generateVec(Range::gen<double>(0, 256)));
+    it = Correlation::iterator(signalGenerator.generateVec(Range::gen<double>(0, 512)));
 }
