@@ -6,9 +6,11 @@
 
 class Executor : public QObject {
     Q_OBJECT
+    K_QML_TYPE(Executor)
+    K_READONLY_PROPERTY(SchedulerLog, log, log, setLog, logChanged, SchedulerLog())
     QVector<Task*> m_tasks;
 public:
-    void addTask(Task* task, long deadline);
+    void addTask(Task* task, size_t deadline);
     explicit Executor(QObject *parent = nullptr);
 
     Scheduler::ResultVector exec(Scheduler *scheduler);

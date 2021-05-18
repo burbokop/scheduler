@@ -4,6 +4,29 @@
 #include "task.h"
 
 #include <QVariant>
+#include <klibcore/src/kmacro.h>
+
+class SchedulerLogValue {
+    size_t m_startTime;
+    size_t m_endTime;
+    QString m_name;
+public:
+    SchedulerLogValue(size_t startTime = 0, size_t endTime = 0, QString name = QString());
+    QString name() const;
+    size_t startTime() const;
+    size_t endTime() const;
+};
+typedef QList<SchedulerLogValue> SchedulerLog;
+
+bool operator==(const SchedulerLogValue& val0, const SchedulerLogValue& val1);
+QDebug &operator << (QDebug &d, const SchedulerLogValue& v);
+
+Q_DECLARE_METATYPE(SchedulerLogValue)
+Q_DECLARE_METATYPE(SchedulerLog)
+class SchedulerLogValueMeta {
+    K_META_TYPE(SchedulerLogValue)
+    K_META_TYPE(SchedulerLog)
+};
 
 class Scheduler : public QObject {
     Q_OBJECT
@@ -15,16 +38,9 @@ private:
     void setResult(int i, QString name, QVariant value);
     void markResultOutstanding(int i, QString name);
 public:
-    class LogValue {
-        size_t m_time;
-        QString m_name;
-    public:
-        LogValue(size_t time, QString name);
-        QString name() const;
-        size_t time() const;
-    };
+
 private:
-    QList<LogValue> m_log;
+    SchedulerLog m_log;
 public:
 
     Task* task(int i) const;
@@ -33,13 +49,15 @@ public:
     bool hasResult(int i) const;
     Scheduler(QObject *parent = nullptr);
     virtual void proceed() = 0;
+    void reset();
     virtual void start() = 0;
     bool running() const;
     void setTasks(const QVector<Task *> &tasks);
     ResultVector results() const;
-    QList<LogValue> log() const;
+    SchedulerLog log() const;
 
-    static QList<LogValue> removeRepeatedNames(QList<LogValue> log);
+    static SchedulerLog removeRepeatedNames(SchedulerLog log);
 };
+
 
 #endif // SCHEDULER_H

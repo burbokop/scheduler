@@ -9,6 +9,7 @@
 #include <src/scheduler/time.h>
 
 #include <src/tasks/fouriertask.h>
+#include <QQmlContext>
 
 void printResults(const Scheduler::ResultVector &results) {
     qDebug() << "RESULTs:" << results;
@@ -30,18 +31,29 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    Executor executor;
+    Executor roundRobinExecutor;
+    Executor erliestDeadlineFirstExecutor;
 
-    Scheduler *roundRobinScheduler = new RoundRobinScheduler(5);
+    Scheduler *roundRobinScheduler = new RoundRobinScheduler(10);
     Scheduler *erliestDeadlineFirstScheduler = new ErliestDeadlineFirstScheduler();
+    {
+        roundRobinExecutor.addTask(new FourierTask("fourier0"), Time::nowMillis() + 3000);
+        roundRobinExecutor.addTask(new FourierTask("fourier1"), Time::nowMillis() + 2000);
+        roundRobinExecutor.addTask(new FourierTask("fourier2"), Time::nowMillis() + 3000);
+        roundRobinExecutor.addTask(new FourierTask("fourier3"), Time::nowMillis() + 2000);
+    } {
+        erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier0"), Time::nowMillis() + 300);
+        erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier1"), Time::nowMillis() + 1000);
+        erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier2"), Time::nowMillis() + 200);
+        erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier3"), Time::nowMillis() + 500);
+    }
 
-    executor.addTask(new FourierTask("fourier0"), Time::nowMillis() + 3000);
-    executor.addTask(new FourierTask("fourier1"), Time::nowMillis() + 2000);
-
-    printResults(executor.exec(roundRobinScheduler));
-    printResults(executor.exec(erliestDeadlineFirstScheduler));
+    printResults(roundRobinExecutor.exec(roundRobinScheduler));
+    printResults(erliestDeadlineFirstExecutor.exec(erliestDeadlineFirstScheduler));
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("rrExec", &roundRobinExecutor);
+    engine.rootContext()->setContextProperty("edfExec", &erliestDeadlineFirstExecutor);
     const QUrl url(QStringLiteral("qrc:/resources/main.qml"));
     engine.load(url);
 

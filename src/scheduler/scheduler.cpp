@@ -1,7 +1,6 @@
 #include "scheduler.h"
 #include "time.h"
 
-
 bool Scheduler::running() const {
     if (m_results.length() < m_tasks.length()) {
         return true;
@@ -41,7 +40,7 @@ bool Scheduler::proceedTask(int taskIndex) {
             return true;
         } else {
             auto result = t->proceed();
-            m_log.push_back(LogValue(time, t->name()));
+            m_log.push_back(SchedulerLogValue(time, time, t->name()));
             if (result.has_value()) {
                 setResult(taskIndex, t->name(), result.value());
                 return true;
@@ -69,14 +68,15 @@ void Scheduler::markResultOutstanding(int i, QString name) {
     m_results[i] = Task::Result(name, std::nullopt);
 }
 
-QList<Scheduler::LogValue> Scheduler::log() const {
+SchedulerLog Scheduler::log() const {
     return m_log;
 }
 
-QList<Scheduler::LogValue> Scheduler::removeRepeatedNames(QList<Scheduler::LogValue> log) {
+SchedulerLog Scheduler::removeRepeatedNames(SchedulerLog log) {
     auto it = log.begin();
     while (it != log.end()) {
         if(it != log.begin() && it->name() == (it - 1)->name()) {
+            *(it - 1) = SchedulerLogValue((it - 1)->startTime(), it->endTime(), it->name());
             it = log.erase(it);
         } else {
             it++;
@@ -94,13 +94,30 @@ bool Scheduler::hasResult(int i) const {
 
 Scheduler::Scheduler(QObject *parent) : QObject(parent) {}
 
-size_t Scheduler::LogValue::time() const {
-    return m_time;
+void Scheduler::reset() {
+    m_log.clear();
+    m_results.clear();
 }
 
-QString Scheduler::LogValue::name() const {
+QString SchedulerLogValue::name() const {
     return m_name;
 }
 
-Scheduler::LogValue::LogValue(size_t time, QString name):
-    m_time(time), m_name(name) {}
+size_t SchedulerLogValue::startTime() const {
+    return m_startTime;
+}
+
+size_t SchedulerLogValue::endTime() const {
+    return m_endTime;
+}
+
+SchedulerLogValue::SchedulerLogValue(size_t startTime, size_t endTime, QString name):
+    m_startTime(startTime), m_endTime(endTime), m_name(name) {}
+
+bool operator==(const SchedulerLogValue &val0, const SchedulerLogValue &val1) {
+    return val0.name() == val1.name() && val0.startTime() == val1.startTime() && val0.endTime() == val1.endTime();
+}
+
+QDebug &operator <<(QDebug &d, const SchedulerLogValue &v) {
+    return d << "(" << v.name() << ", " << v.startTime() << ", " << v.endTime() << ")";
+}

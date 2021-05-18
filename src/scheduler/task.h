@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <QVariant>
+#include <klibcore/src/kmacro.h>
 
 class Task : public QObject {
     Q_OBJECT
@@ -16,7 +17,7 @@ public:
         QVariant m_value;
         bool m_outstanding;
     public:
-        Result(QString name, std::optional<QVariant> value);
+        Result(QString name = QString(), std::optional<QVariant> value = std::nullopt);
         QVariant value() const;
         QString name() const;
         bool outstanding() const;
@@ -42,5 +43,9 @@ public:
 
 QDebug &operator << (QDebug &d, const Task::Result& r);
 
+Q_DECLARE_METATYPE(Task::Result)
+struct TaskMeta {
+    K_META_TYPE_ALIAS(Task::Result, Result)
+};
 
 #endif // TASK_H

@@ -21,5 +21,7 @@ void FourierTask::reset() {
     y = signalGenerator.generateVec(Range::gen<double>(0, 256));
     fourierFunc = Fourier::transform([this](auto x){ return y[x]; }, y.length());
     len = y.length();
+    result.clear();
     result.reserve(len);
+    index = 0;
 }
