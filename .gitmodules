@@ -1,0 +1,3 @@
+[submodule "klibcore"]
+	path = klibcore
+	url = git@github.com:burbokop/klibcore.git
