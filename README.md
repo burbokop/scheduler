@@ -17,3 +17,14 @@
 ```
 # timeline diagram of tasks executing
 ![alt text](https://github.com/burbokop/scheduler/blob/master/result_diagram.png)
+
+
+# timeline diagram of tasks executing with 2 processors
+![alt text](https://github.com/burbokop/scheduler/blob/master/multiple_processors.png)
+
+
+
+
+
+
+
