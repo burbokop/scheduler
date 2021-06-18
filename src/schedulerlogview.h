@@ -8,7 +8,7 @@
 class SchedulerLogView : public QQuickPaintedItem {
     Q_OBJECT
     K_QML_TYPE(SchedulerLogView)
-    K_AUTO_PROPERTY(SchedulerLog, log, log, setLog, logChanged, SchedulerLog())
+    K_AUTO_PROPERTY(QList<SchedulerLog>, log, log, setLog, logChanged, QList<SchedulerLog>())
 public:
     SchedulerLogView(QQuickItem *parent = nullptr);
 

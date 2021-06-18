@@ -35,8 +35,6 @@ int main(int argc, char *argv[])
     Executor roundRobinExecutor;
     Executor erliestDeadlineFirstExecutor;
 
-    Scheduler *roundRobinScheduler = new RoundRobinScheduler(10);
-    Scheduler *erliestDeadlineFirstScheduler = new ErliestDeadlineFirstScheduler();
     {
         roundRobinExecutor.addTask(new FourierTask("fourier0"), Time::nowMillis() + 3000);
         roundRobinExecutor.addTask(new FourierTask("fourier1"), Time::nowMillis() + 2000);
@@ -49,8 +47,8 @@ int main(int argc, char *argv[])
         erliestDeadlineFirstExecutor.addTask(new AutoCorrelationTask("autocorel1"), Time::nowMillis() + 500);
     }
 
-    printResults(roundRobinExecutor.exec(roundRobinScheduler));
-    printResults(erliestDeadlineFirstExecutor.exec(erliestDeadlineFirstScheduler));
+    printResults(roundRobinExecutor.exec<RoundRobinScheduler>(2, 10));
+    printResults(erliestDeadlineFirstExecutor.exec<ErliestDeadlineFirstScheduler>(2));
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("rrExec", &roundRobinExecutor);

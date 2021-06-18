@@ -33,7 +33,7 @@ set(PROJECT_SOURCES
     src/tools/range.cpp
     src/tools/range.h
     src/scheduler/erliestdeadlinefirstscheduler.cpp
-    src/scheduler/erliestdeadlinefirstscheduler.cpp
+    src/scheduler/erliestdeadlinefirstscheduler.h
     src/tasks/autocorrelationtask.cpp
     src/tasks/autocorrelationtask.h
     src/tools/signalgenerator.cpp

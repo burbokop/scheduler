@@ -24,27 +24,44 @@ QColor SchedulerLogView::hashColor(const QString &str) {
 }
 
 void SchedulerLogView::paint(QPainter *painter) {
-    auto l = log();
-    if(l.size() < 2)
+    const auto logRow = log();
+    if(logRow.size() == 0)
         return;
 
-    auto firstTime = l.first().startTime();
-    auto lastTime = l.last().endTime();
+    size_t y = 0;
+    auto rowHeight = height() / logRow.size();
+    size_t yi = 0;
+    for(const auto& l : logRow) {
+        if(l.size() < 2)
+            return;
 
-    for(auto it = l.begin(); it != l.end(); ++it) {
-        auto startPos = KMath::instance()->dmap(it->startTime(), firstTime, lastTime, 0, width());
-        auto endPos = KMath::instance()->dmap(it->endTime(), firstTime, lastTime, 0, width());
-        auto name = it->name();
-        painter->setBrush(QBrush(hashColor(name)));
-        auto rect = QRect(startPos, 0, endPos - startPos, height());
+        auto firstTime = l.first().startTime();
+        auto lastTime = l.last().endTime();
 
-        QPen pen = painter->pen();
-        painter->setPen(Qt::NoPen);
-        painter->drawRect(rect);
+        for(auto it = l.begin(); it != l.end(); ++it) {
+            auto startPos = KMath::instance()->dmap(it->startTime(), firstTime, lastTime, 0, width());
+            auto endPos = KMath::instance()->dmap(it->endTime(), firstTime, lastTime, 0, width());
+            auto name = it->name();
+            painter->setBrush(QBrush(hashColor(name)));
+            auto rect = QRect(startPos, y, endPos - startPos, rowHeight);
 
-        painter->setPen(pen);
-        painter->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, name);
-        painter->drawText(rect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextWordWrap, QString::number(it->startTime() - firstTime));
-        painter->drawText(rect, Qt::AlignRight | Qt::AlignBottom | Qt::TextWordWrap, QString::number(it->endTime() - firstTime));
+            QPen pen = painter->pen();
+            painter->setPen(Qt::NoPen);
+            painter->drawRect(rect);
+
+            painter->setPen(pen);
+            painter->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, name);
+            painter->drawText(rect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextWordWrap, QString::number(it->startTime() - firstTime));
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignBottom | Qt::TextWordWrap, QString::number(it->endTime() - firstTime));
+        }
+
+        painter->save();
+        painter->translate(0, y + rowHeight);
+        painter->rotate(-90);
+        painter->drawText(QRect(0, 0, rowHeight, width()), Qt::AlignLeft | Qt::AlignHCenter, "processor " + QString::number(yi));
+        painter->rotate(90);
+        painter->restore();
+        y += rowHeight;
+        ++yi;
     }
 }

@@ -23,6 +23,6 @@ Scheduler::ResultVector Executor::exec(Scheduler *scheduler) {
     while (scheduler->running()) {
         scheduler->proceed();
     }
-    setLog(Scheduler::removeRepeatedNames(scheduler->log()));
+    setLog(QList<SchedulerLog> { Scheduler::removeRepeatedNames(scheduler->log()) });
     return scheduler->results();
 }
