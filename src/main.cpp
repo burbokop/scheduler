@@ -40,7 +40,7 @@ double calcOutstandingPercent(const Scheduler::ResultVector &results) {
     if(all == 0)
         return 0;
 
-    return oc / all;
+    return double(oc) / double(all);
 }
 
 double calcOutstandingCount(const Scheduler::ResultVector &results) {
@@ -58,16 +58,20 @@ double calcOutstandingCount(const Scheduler::ResultVector &results) {
 template<typename SchedulerType, typename ...Args>
 QPair<QVector<double>, QVector<double>> generateOutstandingSeq(Args... args) {
     QVector<double> x, y;
-    for(size_t i = 0; i < 100; ++i) {
-        double intencity = i;
+    for(size_t i = 0; i < 25; ++i) {
+        double intencity = (i + 1) * 4;
 
         Executor executor;
-        executor.addErlangFlow(ErlangFlow::fromIntencity("fourier", intencity, 48, [](){
+        executor.addErlangFlow(ErlangFlow::fromIntencity("fourier", intencity, 1000 / intencity, [](){
             return new FourierTask("fourier");
         }));
         auto er = executor.exec<SchedulerType>(2, 1000, args...);
+
+        auto oc = calcOutstandingCount(er);
+        auto op = calcOutstandingPercent(er);
+        qDebug() << "i:" << i << "x:" << intencity << "y:" << op << "oc:" << oc;
         x.push_back(intencity);
-        y.push_back(calcOutstandingPercent(er));
+        y.push_back(op);
     }
     return { x, y };
 }
@@ -139,8 +143,8 @@ int drawDiagram(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    Task::printWcet(new FourierTask("Fourier"));
-    Task::printWcet(new AutoCorrelationTask("AutoCorrelation"));
+    Task::printWcet(new FourierTask("Fourier"), 400);
+    Task::printWcet(new AutoCorrelationTask("AutoCorrelation"), 400);
 
     return drawPlot(argc, argv);
 }

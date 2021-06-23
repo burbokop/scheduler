@@ -68,9 +68,7 @@ public:
         log.reserve(processors.size());
         result.reserve(processors.size());
         for(const auto& processor : processors) {
-            auto ll = Scheduler::removeRepeatedNames(processor->log());
-            qDebug() << "log size:" << processor->log().size() << ll.size();
-            log.push_back(ll);
+            log.push_back(Scheduler::removeRepeatedNames(processor->log()));
             result += processor->results();
         }
         setLog(log);
