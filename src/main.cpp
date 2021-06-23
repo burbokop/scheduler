@@ -124,6 +124,9 @@ int drawDiagram(int argc, char *argv[]) {
         //erliestDeadlineFirstExecutor.addTask(new FourierTask("fourier1"), Time::nowMillis() + 1000);
         //erliestDeadlineFirstExecutor.addTask(new AutoCorrelationTask("autocorel0"), Time::nowMillis() + 200);
         //erliestDeadlineFirstExecutor.addTask(new AutoCorrelationTask("autocorel1"), Time::nowMillis() + 500);
+        erliestDeadlineFirstExecutor.addErlangFlow(ErlangFlow::fromIntencity("fourier", 20, 48, [](){
+            return new FourierTask("fourier");
+        }));
     }
 
     auto rrResult = roundRobinExecutor.exec<RoundRobinScheduler>(2, 1000, 10);
@@ -145,6 +148,8 @@ int drawDiagram(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     Task::printWcet(new FourierTask("Fourier"), 400);
     Task::printWcet(new AutoCorrelationTask("AutoCorrelation"), 400);
+
+    //return drawDiagram(argc, argv);
 
     return drawPlot(argc, argv);
 }
