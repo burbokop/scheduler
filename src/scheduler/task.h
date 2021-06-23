@@ -39,6 +39,8 @@ public:
 
     size_t measure();
 
+    static void printWcet(Task* task, size_t count = 1000);
+    void setName(const QString &name);
 };
 
 QDebug &operator << (QDebug &d, const Task::Result& r);

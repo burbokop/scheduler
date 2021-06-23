@@ -58,4 +58,7 @@ target_link_libraries(scheduler
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Quick
   klibcore
+  pthread
+  tbb
+  qcustomplot
   )

@@ -53,6 +53,7 @@ public:
     virtual void start() = 0;
     bool running() const;
     void setTasks(const QVector<Task *> &tasks);
+    void addTask(Task *task);
     ResultVector results() const;
     SchedulerLog log() const;
 

@@ -36,6 +36,32 @@ size_t Task::measure() {
     return result;
 }
 
+void Task::printWcet(Task *task, size_t count) {
+    if(task == nullptr || count == 0)
+        return;
+
+    size_t min = std::numeric_limits<size_t>::max();
+    size_t max = 0;
+    size_t sum = 0;
+    for (size_t i = 0; i < count; ++i) {
+        task->reset();
+        auto ms = task->measure();
+        if(ms < min) {
+            min = ms;
+        }
+        if(ms > max) {
+            max = ms;
+        }
+        sum += ms;
+    }
+    qDebug() << "wcet (" << task->name() << "): min:" << min << "aver:" << double(sum) / double(count) << "max:" << max << "ms";
+}
+
+void Task::setName(const QString &name)
+{
+    m_name = name;
+}
+
 Task::Task(QString name, std::optional<size_t> wcet, QObject *parent) : QObject(parent), m_name(name), m_wcet(wcet) {}
 
 void Task::autodetectWcet(){

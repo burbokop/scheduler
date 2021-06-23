@@ -7,9 +7,15 @@ RoundRobinScheduler::RoundRobinScheduler(size_t quantum, QObject *parent) : Sche
 
 void RoundRobinScheduler::proceed() {
     currentIndex.setLimit(taskCount());
-    if (hasResult(currentIndex)) {
+    for (int i = 0; i < taskCount() && hasResult(currentIndex); ++i) {
         currentIndex++;
     }
+
+    if(hasResult(currentIndex)) {
+        return;
+    }
+
+
     auto now = Time::nowMillis();
     if (now - currentTastStartTime < quantum) {
         if (proceedTask(currentIndex)) {

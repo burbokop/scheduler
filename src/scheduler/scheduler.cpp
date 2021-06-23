@@ -19,6 +19,10 @@ void Scheduler::setTasks(const QVector<Task *> &tasks) {
     m_tasks = tasks;
 }
 
+void Scheduler::addTask(Task *task) {
+    m_tasks.push_back(task);
+}
+
 Task *Scheduler::task(int i) const {
     if (i < m_tasks.length()) {
         return m_tasks[i];

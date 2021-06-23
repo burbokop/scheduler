@@ -4,6 +4,8 @@
 #include "roundindex.h"
 #include "scheduler.h"
 
+#include <QElapsedTimer>
+
 class RoundRobinScheduler : public Scheduler {
     Q_OBJECT
 
