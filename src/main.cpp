@@ -59,7 +59,7 @@ template<typename SchedulerType, typename ...Args>
 QPair<QVector<double>, QVector<double>> generateOutstandingSeq(Args... args) {
     QVector<double> x, y;
     for(size_t i = 0; i < 25; ++i) {
-        double intencity = (i + 1) * 4;
+        double intencity = (i + 1) * 2;
 
         Executor executor;
         executor.addErlangFlow(ErlangFlow::fromIntencity("fourier", intencity, 1000 / intencity, [](){

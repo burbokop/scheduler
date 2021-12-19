@@ -18,7 +18,7 @@ std::optional<QVariant> FourierTask::proceed() {
 
 void FourierTask::reset() {
     SignalGenerator signalGenerator(10, 900);
-    y = signalGenerator.generateVec(Range::gen<double>(0, 256));
+    y = signalGenerator.generateVec(Range::gen<double>(0, 128));
     fourierFunc = Fourier::transform([this](auto x){ return y[x]; }, y.length());
     len = y.length();
     result.clear();
